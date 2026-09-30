@@ -1,0 +1,305 @@
+/* =========================================================
+   GYM MEMBERSHIP MANAGEMENT SYSTEM
+   COMPLETE SQL QUERY SET
+   ========================================================= */
+
+
+/* Q1. Display all members */
+SELECT * FROM MEMBER;
+
+
+/* Q2. Display all memberships */
+SELECT * FROM MEMBERSHIP;
+
+
+/* Q3. Display all trainers */
+SELECT * FROM TRAINER;
+
+
+/* Q4. Display all payments */
+SELECT * FROM PAYMENT;
+
+
+/* Q5. Display all attendance records */
+SELECT * FROM ATTENDANCE;
+
+
+/* Q6. Display all workouts */
+SELECT * FROM WORKOUT;
+
+
+/* Q7. Display members whose gender is Female */
+SELECT * FROM MEMBER
+WHERE Gender = 'F';
+
+
+/* Q8. Display members whose gender is Male */
+SELECT * FROM MEMBER
+WHERE Gender = 'M';
+
+
+/* Q9. Display members born after 2000 */
+SELECT MemberID, FirstName, LastName, DOB
+FROM MEMBER
+WHERE DOB > TO_DATE('01-JAN-2000','DD-MON-YYYY');
+
+
+/* Q10. Display memberships with their member names */
+SELECT M.MemberID, M.FirstName, M.LastName,
+       MS.MembershipID, MS.Plan, MS.StartDate, MS.EndDate
+FROM MEMBER M
+JOIN MEMBERSHIP MS
+ON M.MemberID = MS.MemberID;
+
+
+/* Q11. Display members and their phone numbers */
+SELECT M.MemberID, M.FirstName, M.LastName,
+       MP.Phone
+FROM MEMBER M
+JOIN MEMBER_PHONE MP
+ON M.MemberID = MP.MemberID;
+
+
+/* Q12. Display trainers and their phone numbers */
+SELECT T.TrainerID, T.TrainerName,
+       TP.Phone
+FROM TRAINER T
+JOIN TRAINER_PHONE TP
+ON T.TrainerID = TP.TrainerID;
+
+
+/* Q13. Display members who made payments */
+SELECT M.FirstName, M.LastName,
+       P.Amount, P.PaymentDate, P.PaymentMode
+FROM MEMBER M
+JOIN PAYMENT P
+ON M.MemberID = P.MemberID;
+
+
+/* Q14. Display attendance with member names */
+SELECT M.FirstName, M.LastName,
+       A.AttendanceDate, A.CheckIn, A.CheckInType
+FROM MEMBER M
+JOIN ATTENDANCE A
+ON M.MemberID = A.MemberID;
+
+
+/* Q15. Calculate age of members from DOB */
+SELECT MemberID, FirstName, LastName, DOB,
+       TRUNC(MONTHS_BETWEEN(SYSDATE, DOB) / 12) AS Age
+FROM MEMBER;
+
+
+/* Q16. Find total payment amount */
+SELECT SUM(Amount) AS Total_Payment
+FROM PAYMENT;
+
+
+/* Q17. Find average payment amount */
+SELECT AVG(Amount) AS Average_Payment
+FROM PAYMENT;
+
+
+/* Q18. Display workouts longer than 4 weeks */
+SELECT WorkoutType, DurationWeeks
+FROM WORKOUT
+WHERE DurationWeeks > 4;
+
+
+/* Q19. Find maximum payment */
+SELECT MAX(Amount) AS Maximum_Payment
+FROM PAYMENT;
+
+
+/* Q20. Find minimum payment */
+SELECT MIN(Amount) AS Minimum_Payment
+FROM PAYMENT;
+
+
+/* Q21. Count total members */
+SELECT COUNT(*) AS Total_Members
+FROM MEMBER;
+
+
+/* Q22. Count total trainers */
+SELECT COUNT(*) AS Total_Trainers
+FROM TRAINER;
+
+
+/* Q23. Count members according to gender */
+SELECT Gender, COUNT(*) AS Total
+FROM MEMBER
+GROUP BY Gender;
+
+
+/* Q24. Display members in alphabetical order */
+SELECT MemberID, FirstName, LastName
+FROM MEMBER
+ORDER BY FirstName;
+
+
+/* Q25. Verify record count in every table */
+SELECT 'MEMBER' AS Table_Name, COUNT(*) AS Total
+FROM MEMBER
+
+UNION ALL
+
+SELECT 'MEMBER_PHONE', COUNT(*)
+FROM MEMBER_PHONE
+
+UNION ALL
+
+SELECT 'TRAINER', COUNT(*)
+FROM TRAINER
+
+UNION ALL
+
+SELECT 'TRAINER_PHONE', COUNT(*)
+FROM TRAINER_PHONE
+
+UNION ALL
+
+SELECT 'MEMBERSHIP', COUNT(*)
+FROM MEMBERSHIP
+
+UNION ALL
+
+SELECT 'PAYMENT', COUNT(*)
+FROM PAYMENT
+
+UNION ALL
+
+SELECT 'ATTENDANCE', COUNT(*)
+FROM ATTENDANCE
+
+UNION ALL
+
+SELECT 'WORKOUT', COUNT(*)
+FROM WORKOUT;
+
+
+/* Q26. Display payment details with member names */
+SELECT M.FirstName, M.LastName,
+       P.PaymentID, P.Amount,
+       P.PaymentDate, P.PaymentMode
+FROM MEMBER M
+JOIN PAYMENT P
+ON M.MemberID = P.MemberID;
+
+
+/* Q27. Display trainer and workouts conducted */
+SELECT T.TrainerName,
+       W.WorkoutType,
+       W.DurationWeeks,
+       W.FromDate,
+       W.ToDate
+FROM TRAINER T
+JOIN WORKOUT W
+ON T.TrainerID = W.TrainerID;
+
+
+/* Q28. Display members and their attendance */
+SELECT M.FirstName, M.LastName,
+       A.AttendanceDate,
+       A.CheckIn,
+       A.CheckInType
+FROM MEMBER M
+JOIN ATTENDANCE A
+ON M.MemberID = A.MemberID;
+
+
+/* Q29. Count payments made by each member */
+SELECT MemberID, COUNT(*) AS Number_Of_Payments
+FROM PAYMENT
+GROUP BY MemberID;
+
+
+/* Q30. Find total payment made by each member */
+SELECT MemberID, SUM(Amount) AS Total_Amount
+FROM PAYMENT
+GROUP BY MemberID;
+
+
+/* Q31. Display membership plan and number of members */
+SELECT Plan, COUNT(*) AS Number_Of_Members
+FROM MEMBERSHIP
+GROUP BY Plan;
+
+
+/* Q32. Display workouts conducted by each trainer */
+SELECT TrainerID, COUNT(*) AS Number_Of_Workouts
+FROM WORKOUT
+GROUP BY TrainerID;
+
+
+/* Q33. Display members with their membership plan */
+SELECT M.FirstName, M.LastName,
+       MS.Plan
+FROM MEMBER M
+JOIN MEMBERSHIP MS
+ON M.MemberID = MS.MemberID;
+
+
+/* Q34. Display complete member payment information */
+SELECT M.MemberID,
+       M.FirstName,
+       M.LastName,
+       P.Amount,
+       P.PaymentDate,
+       P.PaymentMode
+FROM MEMBER M
+JOIN PAYMENT P
+ON M.MemberID = P.MemberID
+ORDER BY M.MemberID;
+
+
+/* Q35. Display complete workout information with trainer */
+SELECT T.TrainerName,
+       T.Specialization,
+       W.WorkoutType,
+       W.DurationWeeks
+FROM TRAINER T
+JOIN WORKOUT W
+ON T.TrainerID = W.TrainerID;
+
+
+/* Q36. Display members who have attendance records */
+SELECT DISTINCT M.MemberID,
+       M.FirstName,
+       M.LastName
+FROM MEMBER M
+JOIN ATTENDANCE A
+ON M.MemberID = A.MemberID;
+
+
+/* Q37. Display members having payment above 5000 */
+SELECT M.FirstName, M.LastName,
+       P.Amount
+FROM MEMBER M
+JOIN PAYMENT P
+ON M.MemberID = P.MemberID
+WHERE P.Amount > 5000;
+
+
+/* Q38. Display workouts between 4 and 12 weeks */
+SELECT WorkoutType, DurationWeeks
+FROM WORKOUT
+WHERE DurationWeeks BETWEEN 4 AND 12;
+
+
+/* Q39. Display members whose first name starts with A */
+SELECT MemberID, FirstName, LastName
+FROM MEMBER
+WHERE FirstName LIKE 'A%';
+
+
+/* Q40. Display the latest payment */
+SELECT *
+FROM PAYMENT
+WHERE PaymentDate =
+      (SELECT MAX(PaymentDate) FROM PAYMENT);
+
+
+/* =========================================================
+   END OF QUERY SET
+   ========================================================= */
