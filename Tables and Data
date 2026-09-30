@@ -1,0 +1,329 @@
+/* =========================================================
+   GYM MEMBERSHIP MANAGEMENT SYSTEM
+   TABLE CREATION + 15 RECORDS IN EACH TABLE
+   ========================================================= */
+
+
+/* =========================
+   1. CREATE MEMBER TABLE
+   ========================= */
+
+CREATE TABLE MEMBER
+(
+    MemberID NUMBER(5) PRIMARY KEY,
+    FirstName VARCHAR2(30) NOT NULL,
+    LastName VARCHAR2(30) NOT NULL,
+    Gender CHAR(1) CHECK (Gender IN ('M','F')),
+    DOB DATE NOT NULL
+);
+
+
+/* =========================
+   2. CREATE MEMBER_PHONE
+   ========================= */
+
+CREATE TABLE MEMBER_PHONE
+(
+    MemberID NUMBER(5),
+    Phone VARCHAR2(15),
+
+    PRIMARY KEY (MemberID, Phone),
+
+    FOREIGN KEY (MemberID)
+    REFERENCES MEMBER(MemberID)
+);
+
+
+/* =========================
+   3. CREATE TRAINER TABLE
+   ========================= */
+
+CREATE TABLE TRAINER
+(
+    TrainerID NUMBER(5) PRIMARY KEY,
+    TrainerName VARCHAR2(40) NOT NULL,
+    Specialization VARCHAR2(40) NOT NULL
+);
+
+
+/* =========================
+   4. CREATE TRAINER_PHONE
+   ========================= */
+
+CREATE TABLE TRAINER_PHONE
+(
+    TrainerID NUMBER(5),
+    Phone VARCHAR2(15),
+
+    PRIMARY KEY (TrainerID, Phone),
+
+    FOREIGN KEY (TrainerID)
+    REFERENCES TRAINER(TrainerID)
+);
+
+
+/* =========================
+   5. CREATE MEMBERSHIP TABLE
+   ========================= */
+
+CREATE TABLE MEMBERSHIP
+(
+    MembershipID NUMBER(5) PRIMARY KEY,
+    MemberID NUMBER(5) NOT NULL,
+    Plan VARCHAR2(20) NOT NULL,
+    StartDate DATE NOT NULL,
+    EndDate DATE NOT NULL,
+    AssignedDate DATE NOT NULL,
+
+    FOREIGN KEY (MemberID)
+    REFERENCES MEMBER(MemberID),
+
+    CHECK (EndDate >= StartDate)
+);
+
+
+/* =========================
+   6. CREATE PAYMENT TABLE
+   ========================= */
+
+CREATE TABLE PAYMENT
+(
+    PaymentID NUMBER(5) PRIMARY KEY,
+    MemberID NUMBER(5) NOT NULL,
+    Amount NUMBER(10,2) CHECK (Amount > 0),
+    PaymentDate DATE NOT NULL,
+    PaymentMode VARCHAR2(15),
+
+    FOREIGN KEY (MemberID)
+    REFERENCES MEMBER(MemberID),
+
+    CHECK (PaymentMode IN ('Cash','UPI','Card'))
+);
+
+
+/* =========================
+   7. CREATE ATTENDANCE TABLE
+   ========================= */
+
+CREATE TABLE ATTENDANCE
+(
+    AttendanceID NUMBER(5) PRIMARY KEY,
+    MemberID NUMBER(5) NOT NULL,
+    AttendanceDate DATE NOT NULL,
+    CheckIn VARCHAR2(8) NOT NULL,
+    CheckInType VARCHAR2(15),
+
+    FOREIGN KEY (MemberID)
+    REFERENCES MEMBER(MemberID),
+
+    CHECK (CheckInType IN ('Regular','Trainer'))
+);
+
+
+/* =========================
+   8. CREATE WORKOUT TABLE
+   ========================= */
+
+CREATE TABLE WORKOUT
+(
+    WorkoutID NUMBER(5) PRIMARY KEY,
+    TrainerID NUMBER(5) NOT NULL,
+    WorkoutType VARCHAR2(40) NOT NULL,
+    DurationWeeks NUMBER(3) CHECK (DurationWeeks > 0),
+    FromDate DATE NOT NULL,
+    ToDate DATE NOT NULL,
+
+    FOREIGN KEY (TrainerID)
+    REFERENCES TRAINER(TrainerID),
+
+    CHECK (ToDate >= FromDate)
+);
+
+
+/* =========================================================
+   INSERT 15 MEMBERS
+   ========================================================= */
+
+INSERT ALL
+    INTO MEMBER VALUES (101,'Aarav','Sharma','M',DATE '2000-01-15')
+    INTO MEMBER VALUES (102,'Ananya','Reddy','F',DATE '2001-03-20')
+    INTO MEMBER VALUES (103,'Rahul','Kumar','M',DATE '1999-06-05')
+    INTO MEMBER VALUES (104,'Priya','Nair','F',DATE '2002-08-12')
+    INTO MEMBER VALUES (105,'Vikram','Patel','M',DATE '2000-10-25')
+    INTO MEMBER VALUES (106,'Sneha','Rao','F',DATE '2001-02-18')
+    INTO MEMBER VALUES (107,'Arjun','Mehta','M',DATE '1998-05-30')
+    INTO MEMBER VALUES (108,'Kavya','Iyer','F',DATE '2002-09-10')
+    INTO MEMBER VALUES (109,'Rohan','Singh','M',DATE '1999-11-22')
+    INTO MEMBER VALUES (110,'Neha','Verma','F',DATE '2001-04-08')
+    INTO MEMBER VALUES (111,'Kiran','Das','M',DATE '2000-07-14')
+    INTO MEMBER VALUES (112,'Pooja','Shah','F',DATE '2002-01-27')
+    INTO MEMBER VALUES (113,'Aditya','Joshi','M',DATE '1998-12-09')
+    INTO MEMBER VALUES (114,'Meera','Kapoor','F',DATE '2001-05-16')
+    INTO MEMBER VALUES (115,'Sanjay','Reddy','M',DATE '1999-09-03')
+SELECT 1 FROM DUAL;
+
+
+/* =========================================================
+   INSERT 15 MEMBER PHONE RECORDS
+   ========================================================= */
+
+INSERT ALL
+    INTO MEMBER_PHONE VALUES (101,'9876500001')
+    INTO MEMBER_PHONE VALUES (102,'9876500002')
+    INTO MEMBER_PHONE VALUES (103,'9876500003')
+    INTO MEMBER_PHONE VALUES (104,'9876500004')
+    INTO MEMBER_PHONE VALUES (105,'9876500005')
+    INTO MEMBER_PHONE VALUES (106,'9876500006')
+    INTO MEMBER_PHONE VALUES (107,'9876500007')
+    INTO MEMBER_PHONE VALUES (108,'9876500008')
+    INTO MEMBER_PHONE VALUES (109,'9876500009')
+    INTO MEMBER_PHONE VALUES (110,'9876500010')
+    INTO MEMBER_PHONE VALUES (111,'9876500011')
+    INTO MEMBER_PHONE VALUES (112,'9876500012')
+    INTO MEMBER_PHONE VALUES (113,'9876500013')
+    INTO MEMBER_PHONE VALUES (114,'9876500014')
+    INTO MEMBER_PHONE VALUES (115,'9876500015')
+SELECT 1 FROM DUAL;
+
+
+/* =========================================================
+   INSERT 15 TRAINERS
+   ========================================================= */
+
+INSERT ALL
+    INTO TRAINER VALUES (201,'Vivek','Strength Training')
+    INTO TRAINER VALUES (202,'Megha','Yoga')
+    INTO TRAINER VALUES (203,'Ritesh','Cardio')
+    INTO TRAINER VALUES (204,'Anita','Weight Loss')
+    INTO TRAINER VALUES (205,'Karan','CrossFit')
+    INTO TRAINER VALUES (206,'Divya','Pilates')
+    INTO TRAINER VALUES (207,'Manoj','Functional Training')
+    INTO TRAINER VALUES (208,'Sonal','Zumba')
+    INTO TRAINER VALUES (209,'Nikhil','Strength Training')
+    INTO TRAINER VALUES (210,'Isha','Yoga')
+    INTO TRAINER VALUES (211,'Varun','Cardio')
+    INTO TRAINER VALUES (212,'Riya','Weight Loss')
+    INTO TRAINER VALUES (213,'Amit','CrossFit')
+    INTO TRAINER VALUES (214,'Shreya','Pilates')
+    INTO TRAINER VALUES (215,'Ravi','Functional Training')
+SELECT 1 FROM DUAL;
+
+
+/* =========================================================
+   INSERT 15 TRAINER PHONE RECORDS
+   ========================================================= */
+
+INSERT ALL
+    INTO TRAINER_PHONE VALUES (201,'9866000001')
+    INTO TRAINER_PHONE VALUES (202,'9866000002')
+    INTO TRAINER_PHONE VALUES (203,'9866000003')
+    INTO TRAINER_PHONE VALUES (204,'9866000004')
+    INTO TRAINER_PHONE VALUES (205,'9866000005')
+    INTO TRAINER_PHONE VALUES (206,'9866000006')
+    INTO TRAINER_PHONE VALUES (207,'9866000007')
+    INTO TRAINER_PHONE VALUES (208,'9866000008')
+    INTO TRAINER_PHONE VALUES (209,'9866000009')
+    INTO TRAINER_PHONE VALUES (210,'9866000010')
+    INTO TRAINER_PHONE VALUES (211,'9866000011')
+    INTO TRAINER_PHONE VALUES (212,'9866000012')
+    INTO TRAINER_PHONE VALUES (213,'9866000013')
+    INTO TRAINER_PHONE VALUES (214,'9866000014')
+    INTO TRAINER_PHONE VALUES (215,'9866000015')
+SELECT 1 FROM DUAL;
+
+
+/* =========================================================
+   INSERT 15 MEMBERSHIP RECORDS
+   ========================================================= */
+
+INSERT ALL
+    INTO MEMBERSHIP VALUES (301,101,'Monthly',DATE '2026-07-01',DATE '2026-08-01',DATE '2026-07-01')
+    INTO MEMBERSHIP VALUES (302,102,'Quarterly',DATE '2026-07-03',DATE '2026-10-03',DATE '2026-07-03')
+    INTO MEMBERSHIP VALUES (303,103,'Annual',DATE '2026-07-05',DATE '2027-07-05',DATE '2026-07-05')
+    INTO MEMBERSHIP VALUES (304,104,'Monthly',DATE '2026-07-07',DATE '2026-08-07',DATE '2026-07-07')
+    INTO MEMBERSHIP VALUES (305,105,'Half-Yearly',DATE '2026-07-10',DATE '2027-01-10',DATE '2026-07-10')
+    INTO MEMBERSHIP VALUES (306,106,'Quarterly',DATE '2026-07-12',DATE '2026-10-12',DATE '2026-07-12')
+    INTO MEMBERSHIP VALUES (307,107,'Annual',DATE '2026-07-15',DATE '2027-07-15',DATE '2026-07-15')
+    INTO MEMBERSHIP VALUES (308,108,'Monthly',DATE '2026-07-18',DATE '2026-08-18',DATE '2026-07-18')
+    INTO MEMBERSHIP VALUES (309,109,'Quarterly',DATE '2026-07-20',DATE '2026-10-20',DATE '2026-07-20')
+    INTO MEMBERSHIP VALUES (310,110,'Annual',DATE '2026-07-22',DATE '2027-07-22',DATE '2026-07-22')
+    INTO MEMBERSHIP VALUES (311,111,'Monthly',DATE '2026-07-25',DATE '2026-08-25',DATE '2026-07-25')
+    INTO MEMBERSHIP VALUES (312,112,'Half-Yearly',DATE '2026-07-28',DATE '2027-01-28',DATE '2026-07-28')
+    INTO MEMBERSHIP VALUES (313,113,'Quarterly',DATE '2026-08-01',DATE '2026-11-01',DATE '2026-08-01')
+    INTO MEMBERSHIP VALUES (314,114,'Annual',DATE '2026-08-03',DATE '2027-08-03',DATE '2026-08-03')
+    INTO MEMBERSHIP VALUES (315,115,'Monthly',DATE '2026-08-05',DATE '2026-09-05',DATE '2026-08-05')
+SELECT 1 FROM DUAL;
+
+
+/* =========================================================
+   INSERT 15 PAYMENT RECORDS
+   ========================================================= */
+
+INSERT ALL
+    INTO PAYMENT VALUES (401,101,1500,DATE '2026-07-01','UPI')
+    INTO PAYMENT VALUES (402,102,4000,DATE '2026-07-03','Card')
+    INTO PAYMENT VALUES (403,103,12000,DATE '2026-07-05','UPI')
+    INTO PAYMENT VALUES (404,104,1500,DATE '2026-07-07','Cash')
+    INTO PAYMENT VALUES (405,105,7000,DATE '2026-07-10','Card')
+    INTO PAYMENT VALUES (406,106,4000,DATE '2026-07-12','UPI')
+    INTO PAYMENT VALUES (407,107,12000,DATE '2026-07-15','Card')
+    INTO PAYMENT VALUES (408,108,1500,DATE '2026-07-18','Cash')
+    INTO PAYMENT VALUES (409,109,4000,DATE '2026-07-20','UPI')
+    INTO PAYMENT VALUES (410,110,12000,DATE '2026-07-22','Card')
+    INTO PAYMENT VALUES (411,111,1500,DATE '2026-07-25','UPI')
+    INTO PAYMENT VALUES (412,112,7000,DATE '2026-07-28','Cash')
+    INTO PAYMENT VALUES (413,113,4000,DATE '2026-08-01','UPI')
+    INTO PAYMENT VALUES (414,114,12000,DATE '2026-08-03','Card')
+    INTO PAYMENT VALUES (415,115,1500,DATE '2026-08-05','Cash')
+SELECT 1 FROM DUAL;
+
+
+/* =========================================================
+   INSERT 15 ATTENDANCE RECORDS
+   ========================================================= */
+
+INSERT ALL
+    INTO ATTENDANCE VALUES (501,101,DATE '2026-08-20','07:00:00','Regular')
+    INTO ATTENDANCE VALUES (502,102,DATE '2026-08-20','08:00:00','Regular')
+    INTO ATTENDANCE VALUES (503,103,DATE '2026-08-20','06:30:00','Regular')
+    INTO ATTENDANCE VALUES (504,104,DATE '2026-08-21','18:00:00','Regular')
+    INTO ATTENDANCE VALUES (505,105,DATE '2026-08-21','07:30:00','Trainer')
+    INTO ATTENDANCE VALUES (506,106,DATE '2026-08-21','17:30:00','Regular')
+    INTO ATTENDANCE VALUES (507,107,DATE '2026-08-22','06:45:00','Trainer')
+    INTO ATTENDANCE VALUES (508,108,DATE '2026-08-22','08:15:00','Regular')
+    INTO ATTENDANCE VALUES (509,109,DATE '2026-08-22','07:15:00','Regular')
+    INTO ATTENDANCE VALUES (510,110,DATE '2026-08-23','18:15:00','Regular')
+    INTO ATTENDANCE VALUES (511,111,DATE '2026-08-23','06:50:00','Trainer')
+    INTO ATTENDANCE VALUES (512,112,DATE '2026-08-23','17:45:00','Regular')
+    INTO ATTENDANCE VALUES (513,113,DATE '2026-08-24','07:20:00','Regular')
+    INTO ATTENDANCE VALUES (514,114,DATE '2026-08-24','18:30:00','Regular')
+    INTO ATTENDANCE VALUES (515,115,DATE '2026-08-24','06:40:00','Trainer')
+SELECT 1 FROM DUAL;
+
+
+/* =========================================================
+   INSERT 15 WORKOUT RECORDS
+   ========================================================= */
+
+INSERT ALL
+    INTO WORKOUT VALUES (601,201,'Strength Training',12,DATE '2026-07-01',DATE '2026-09-23')
+    INTO WORKOUT VALUES (602,202,'Yoga',8,DATE '2026-07-03',DATE '2026-08-28')
+    INTO WORKOUT VALUES (603,203,'Cardio',6,DATE '2026-07-05',DATE '2026-08-16')
+    INTO WORKOUT VALUES (604,204,'Weight Loss',10,DATE '2026-07-07',DATE '2026-09-15')
+    INTO WORKOUT VALUES (605,205,'CrossFit',12,DATE '2026-07-10',DATE '2026-10-02')
+    INTO WORKOUT VALUES (606,206,'Pilates',8,DATE '2026-07-12',DATE '2026-09-06')
+    INTO WORKOUT VALUES (607,207,'Functional Training',10,DATE '2026-07-15',DATE '2026-09-23')
+    INTO WORKOUT VALUES (608,208,'Zumba',6,DATE '2026-07-18',DATE '2026-08-29')
+    INTO WORKOUT VALUES (609,209,'Strength Training',12,DATE '2026-07-20',DATE '2026-10-12')
+    INTO WORKOUT VALUES (610,210,'Yoga',8,DATE '2026-07-22',DATE '2026-09-15')
+    INTO WORKOUT VALUES (611,211,'Cardio',6,DATE '2026-07-25',DATE '2026-09-05')
+    INTO WORKOUT VALUES (612,212,'Weight Loss',10,DATE '2026-07-28',DATE '2026-10-05')
+    INTO WORKOUT VALUES (613,213,'CrossFit',12,DATE '2026-08-01',DATE '2026-10-24')
+    INTO WORKOUT VALUES (614,214,'Pilates',8,DATE '2026-08-03',DATE '2026-09-28')
+    INTO WORKOUT VALUES (615,215,'Functional Training',10,DATE '2026-08-05',DATE '2026-10-14')
+SELECT 1 FROM DUAL;
+
+
+/* SAVE ALL DATA */
+
+COMMIT;
